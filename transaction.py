@@ -3,7 +3,7 @@
 
     Payment Gateway Transaction
 
-    :copyright: (c) 2013 by Openlabs Technologies & Consulting (P) Ltd.
+    :copyright: (c) 2013-2014 by Openlabs Technologies & Consulting (P) Ltd.
     :license: BSD, see LICENSE for more details
 
 '''
@@ -58,7 +58,7 @@ class PaymentGatewayBeanstream:
     def get_methods(self):
         if self.provider == 'beanstream':
             return [
-                ('credit_card_beanstream', 'Credit Card - Beanstream'),
+                ('credit_card', 'Credit Card - Beanstream'),
             ]
         return super(PaymentGatewayBeanstream, self).get_methods()
 

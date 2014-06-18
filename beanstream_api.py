@@ -68,7 +68,6 @@ class BeanstreamClient(object):
         data['serviceVersion'] = self.service_version
         data['requestType'] = 'BACKEND'
 
-        print data
         result = requests.post(self.service_url, data=data)
 
         response = self.make_response(result.content)
@@ -103,10 +102,9 @@ class BeanstreamClient(object):
         """
         # Parse the response and send it back
         rv = urlparse.parse_qs(response, keep_blank_values=True)
-        print rv
         return dict([
             (key, value[0]) if len(value) == 1 else (key, value)
-                for key, value in rv.iteritems()
+            for key, value in rv.iteritems()
         ])
 
 

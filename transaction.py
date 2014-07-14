@@ -242,6 +242,4 @@ class AddPaymentProfile:
         #
         # In other words, each profile is maintained as a separate profile
         # on beanstream
-        self.create_profile(result['customerCode'])
-
-        return 'end'
+        return self.create_profile(result['customerCode'])

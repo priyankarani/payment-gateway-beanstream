@@ -183,6 +183,18 @@ class TestTransaction(unittest.TestCase):
         )
         self.beanstream_gateway.save()
 
+        self.beanstream_hash_gateway = self.PaymentGateway(
+            name='beanstream',
+            journal=self.cash_journal,
+            provider='beanstream',
+            method='credit_card',
+            auth_mechanism='hash',
+            hash_key='SECRET KEY',
+            beanstream_currency=currency,
+            test=True,
+        )
+        self.beanstream_hash_gateway.save()
+
         # Create parties
         self.party1, = self.Party.create([{
             'name': 'Test party - 1',

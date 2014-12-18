@@ -20,29 +20,59 @@ __all__ = [
 ]
 __metaclass__ = PoolMeta
 
+PASSCODE = {
+    'required': (
+        (Eval('provider') == 'beanstream') &
+        (Eval('auth_mechanism') == 'passcode')
+    ),
+    'invisible': ~(
+        (Eval('provider') == 'beanstream') &
+        (Eval('auth_mechanism') == 'passcode')
+    )
+}
+
 
 class PaymentGatewayBeanstream:
     "Beanstream Gateway Implementation"
     __name__ = 'payment_gateway.gateway'
 
+    auth_mechanism = fields.Selection([
+        ('passcode', 'Passcode'),
+        ('hash', 'Hash')
+    ], 'Authentication Mechanism', states={
+        'required': Eval('provider') == 'beanstream',
+        'invisible': Eval('provider') != 'beanstream'
+    })
+
     beanstream_merchant_id = fields.Char(
-        'Merchant ID', states={
-            'required': Eval('provider') == 'beanstream',
-            'invisible': Eval('provider') != 'beanstream',
-        }, depends=['provider']
+        'Merchant ID', states=PASSCODE, depends=['provider', 'auth_mechanism']
     )
     beanstream_pass_code = fields.Char(
-        'Pass Code', states={
-            'required': Eval('provider') == 'beanstream',
-            'invisible': Eval('provider') != 'beanstream',
-        }, depends=['provider']
+        'Pass Code', states=PASSCODE, depends=['provider', 'auth_mechanism']
     )
     beanstream_currency = fields.Many2One(
         'currency.currency', 'Currency', states={
             'required': Eval('provider') == 'beanstream',
-            'invisible': Eval('provider') != 'beanstream',
+            'invisible': Eval('provider') != 'beanstream'
         }, depends=['provider']
     )
+
+    hash_key = fields.Char(
+        "Hash Key", states={
+            'required': (
+                (Eval('provider') == 'beanstream') &
+                (Eval('auth_mechanism') == 'hash')
+            ),
+            'invisible': ~(
+                (Eval('provider') == 'beanstream') &
+                (Eval('auth_mechanism') == 'hash')
+            )
+        }, depends=['provider', 'auth_mechanism']
+    )
+
+    @staticmethod
+    def default_auth_mechanism():
+        return 'passcode'
 
     @classmethod
     def get_providers(cls, values=None):
